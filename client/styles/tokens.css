@@ -1,0 +1,57 @@
+/* ─────────────────────────────────────────
+   FinTrack Design Tokens — matches Figma exactly
+───────────────────────────────────────── */
+:root {
+  /* Brand colours */
+  --primary:        #1A1A2E;
+  --accent:         #4F46E5;
+  --accent-hover:   #4338CA;
+  --accent-light:   rgba(79, 70, 229, 0.10);
+
+  /* Semantic colours */
+  --success:        #16A34A;
+  --success-light:  #DCFCE7;
+  --warning:        #D97706;
+  --warning-light:  #FEF3C7;
+  --danger:         #DC2626;
+  --danger-light:   #FEE2E2;
+
+  /* Surface & border */
+  --surface:        #FAFAFA;
+  --border:         #E5E7EB;
+  --bg:             #F3F4F6;
+  --white:          #ffffff;
+
+  /* Text */
+  --text-primary:   #111827;
+  --text-secondary: #6B7280;
+  --text-muted:     #9CA3AF;
+
+  /* Typography */
+  --font: 'Inter', sans-serif;
+
+  /* Spacing (4px base unit) */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+
+  /* Border radius */
+  --radius-card:  12px;
+  --radius-btn:   8px;
+  --radius-input: 8px;
+  --radius-pill:  999px;
+
+  /* Shadows */
+  --shadow-card:  0 1px 3px rgba(0,0,0,.07), 0 4px 16px rgba(0,0,0,.05);
+  --shadow-focus: 0 0 0 3px rgba(79, 70, 229, 0.18);
+
+  /* Layout */
+  --sidebar-w:   220px;
+  --topbar-h:    64px;
+
+  /* Transitions */
+  --t: .18s ease;
+}
