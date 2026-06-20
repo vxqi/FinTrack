@@ -1,0 +1,61 @@
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: box-shadow var(--t), transform var(--t);
+}
+.card:hover {
+  box-shadow: var(--shadow-card);
+}
+
+.dark {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.dark .label { color: rgba(255,255,255,.6); }
+.dark .value { color: #fff; }
+.dark .subLabel { color: rgba(255,255,255,.7); }
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.15;
+}
+
+.subLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.trend {
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+.trendUp { color: var(--danger); }
+.trendDown { color: var(--success); }
+
+.progressTrack {
+  height: 6px;
+  background: var(--border);
+  border-radius: var(--radius-pill);
+  margin-top: 4px;
+  overflow: hidden;
+}
+.dark .progressTrack { background: rgba(255,255,255,.15); }
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width .5s ease;
+}
