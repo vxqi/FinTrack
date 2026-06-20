@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
+import AppError from '../utils/AppError.js'
+import catchAsync from '../utils/catchAsync.js'
 
-export const protect = async (req, res, next) => {
+export const protect = catchAsync(async (req, res, next) => {
   let token
 
-  // Check cookie first, then Authorization header
   if (req.cookies?.token) {
     token = req.cookies.token
   } else if (req.headers.authorization?.startsWith('Bearer ')) {
@@ -12,17 +13,15 @@ export const protect = async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(401).json({ success: false, message: 'Not authorised — no token' })
+    throw new AppError('Not authorised — please log in', 401)
   }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    req.user = await User.findById(decoded.id)
-    if (!req.user) {
-      return res.status(401).json({ success: false, message: 'User no longer exists' })
-    }
-    next()
-  } catch {
-    res.status(401).json({ success: false, message: 'Token is invalid or expired' })
+  const decoded = jwt.verify(token, process.env.JWT_SECRET)
+  req.user = await User.findById(decoded.id)
+
+  if (!req.user) {
+    throw new AppError('The user belonging to this token no longer exists', 401)
   }
-}
+
+  next()
+})
