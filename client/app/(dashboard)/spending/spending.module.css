@@ -1,0 +1,132 @@
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ── Period pills ── */
+.pillGroup {
+  display: flex;
+  gap: 6px;
+}
+.pill {
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 12.5px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  font-family: var(--font);
+}
+.pill:hover { border-color: #d1d5db; color: var(--text-primary); }
+.pillActive {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.exportBtn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-btn);
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 12.5px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  font-family: var(--font);
+}
+.exportBtn:hover { background: var(--bg); color: var(--text-primary); border-color: #d1d5db; }
+
+/* ── Layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 16px;
+}
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rightCol {}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+.cardTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+/* ── Narrative card ── */
+.narrativeCard {
+  background: var(--warning-light);
+  border: 1px solid #FDE68A;
+  border-radius: var(--radius-card);
+  padding: 18px;
+}
+.narrativeLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--warning);
+  margin-bottom: 8px;
+}
+.narrativeText {
+  font-size: 13px;
+  color: #92600A;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.narrativeText strong { font-weight: 700; }
+.narrativeLink {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: none; border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: color var(--t);
+}
+.narrativeLink:hover { color: var(--accent-hover); }
+
+/* ── Right column header ── */
+.rightHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.rightHeader .cardTitle { margin-bottom: 0; }
+
+.addBtn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-btn);
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12.5px; font-weight: 600;
+  cursor: pointer;
+  transition: background var(--t), transform var(--t);
+  font-family: var(--font);
+  white-space: nowrap;
+}
+.addBtn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+/* ── Responsive ── */
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: 1fr; }
+}
