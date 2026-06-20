@@ -4,14 +4,17 @@ import {
   createTransaction,
   deleteTransaction,
   getSummary,
+  getMonthlyTrend,
 } from '../controllers/transactionController.js'
 import { protect } from '../middleware/auth.js'
+import { transactionRules, transactionQueryRules, validate } from '../middleware/validators.js'
 
 const router = express.Router()
 
-router.get('/summary', protect, getSummary)
-router.get('/',        protect, getTransactions)
-router.post('/',       protect, createTransaction)
-router.delete('/:id',  protect, deleteTransaction)
+router.get('/summary',       protect, getSummary)
+router.get('/monthly-trend', protect, getMonthlyTrend)
+router.get('/',              protect, transactionQueryRules, validate, getTransactions)
+router.post('/',             protect, transactionRules, validate, createTransaction)
+router.delete('/:id',        protect, deleteTransaction)
 
 export default router
