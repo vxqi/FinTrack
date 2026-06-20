@@ -1,0 +1,15 @@
+.wrap {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background .3s ease;
+}
+.filled {
+  background: var(--accent);
+}
