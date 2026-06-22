@@ -54,7 +54,12 @@ export default function DashboardPage() {
         setLoading(false)
       }
     }
+
     load()
+
+    // Refresh dashboard data whenever a new transaction is logged from the Topbar
+    window.addEventListener('fintrack:transaction-logged', load)
+    return () => window.removeEventListener('fintrack:transaction-logged', load)
   }, [])
 
   const { income, totalSpent, budgetUsedPct, safeToSpendToday } = useMemo(() => {
