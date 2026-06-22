@@ -66,6 +66,11 @@ export default function TransactionsPage() {
 
   useEffect(() => { loadTransactions() }, [period, type])
 
+  useEffect(() => {
+    window.addEventListener('fintrack:transaction-logged', loadTransactions)
+    return () => window.removeEventListener('fintrack:transaction-logged', loadTransactions)
+  }, [period, type])
+
   const handleDelete = async (id) => {
     try {
       await transactionsApi.remove(id)
