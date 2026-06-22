@@ -1,0 +1,189 @@
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.pageTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tabGroup { display: flex; gap: 6px; }
+.tab {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 12.5px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  font-family: var(--font);
+}
+.tab:hover { border-color: #d1d5db; color: var(--text-primary); }
+.tabActive { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+/* ── Banner ── */
+.banner {
+  background: var(--primary);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.bannerLabel {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: rgba(255,255,255,.5);
+  letter-spacing: .4px;
+  white-space: nowrap;
+}
+.bannerText {
+  flex: 1;
+  font-size: 13.5px;
+  color: #fff;
+  line-height: 1.5;
+}
+.saveTipBtn {
+  height: 34px;
+  padding: 0 14px;
+  background: rgba(255,255,255,.1);
+  border: 1.5px solid rgba(255,255,255,.25);
+  border-radius: var(--radius-btn);
+  color: #fff;
+  font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  transition: background var(--t);
+  font-family: var(--font);
+  white-space: nowrap;
+}
+.saveTipBtn:hover { background: rgba(255,255,255,.18); }
+
+/* ── Tip grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* ── Progress section ── */
+.progressSection {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.progressLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.progressTrack {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+  transition: width .5s ease;
+}
+.viewAllLink {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  white-space: nowrap;
+  transition: color var(--t);
+}
+.viewAllLink:hover { color: var(--accent-hover); }
+
+/* ── Glossary ── */
+.glossaryWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.searchWrap {
+  position: relative;
+  max-width: 360px;
+}
+.searchIcon {
+  position: absolute;
+  left: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+.searchInput {
+  width: 100%;
+  height: 40px;
+  padding: 0 14px 0 36px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-input);
+  font-size: 13.5px;
+  color: var(--text-primary);
+  background: var(--white);
+  outline: none;
+  transition: border-color var(--t), box-shadow var(--t);
+  font-family: var(--font);
+}
+.searchInput:focus { border-color: var(--accent); box-shadow: var(--shadow-focus); }
+
+.glossaryList {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 8px 20px;
+}
+.glossaryItem {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.glossaryItem:last-child { border-bottom: none; }
+.glossaryTerm {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.glossaryDef {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.emptyText {
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  padding: 30px 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1000px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .banner { flex-direction: column; align-items: flex-start; }
+}
