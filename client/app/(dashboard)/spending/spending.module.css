@@ -7,6 +7,24 @@
   gap: 12px;
 }
 
+.loadingText, .errorText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 60px 0;
+}
+.errorText { color: var(--danger); }
+
+.emptyState {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13.5px;
+}
+
 /* ── Period pills ── */
 .pillGroup {
   display: flex;
