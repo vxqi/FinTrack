@@ -1,0 +1,158 @@
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.pageTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.actions { display: flex; gap: 10px; }
+
+.ghostBtn {
+  height: 38px;
+  padding: 0 14px;
+  display: flex; align-items: center; gap: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px; font-weight: 500;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  font-family: var(--font);
+}
+.ghostBtn:hover { background: var(--bg); color: var(--text-primary); border-color: #d1d5db; }
+
+.primaryBtn {
+  height: 38px;
+  padding: 0 16px;
+  display: flex; align-items: center; gap: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px; font-weight: 600;
+  border: none; border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: background var(--t), transform var(--t);
+  font-family: var(--font);
+}
+.primaryBtn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+/* ── Filter bar ── */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+.searchIcon {
+  position: absolute;
+  left: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+.searchInput {
+  width: 100%;
+  height: 38px;
+  padding: 0 14px 0 36px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-input);
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--white);
+  outline: none;
+  transition: border-color var(--t), box-shadow var(--t);
+  font-family: var(--font);
+}
+.searchInput::placeholder { color: var(--text-muted); }
+.searchInput:focus { border-color: var(--accent); box-shadow: var(--shadow-focus); }
+
+.sortBtn {
+  height: 38px;
+  padding: 0 14px;
+  display: flex; align-items: center; gap: 6px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-btn);
+  font-size: 12.5px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  font-family: var(--font);
+  white-space: nowrap;
+}
+.sortBtn:hover { background: var(--bg); color: var(--text-primary); border-color: #d1d5db; }
+
+.pillGroup { display: flex; gap: 6px; }
+.pill {
+  height: 38px;
+  padding: 0 13px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 12.5px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  font-family: var(--font);
+  white-space: nowrap;
+}
+.pill:hover { border-color: #d1d5db; color: var(--text-primary); }
+.pillActive { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+/* ── List card ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 8px 20px;
+}
+
+.dateHeader {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 14px 4px 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+
+.loadingText, .errorText, .emptyText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 50px 0;
+}
+.errorText { color: var(--danger); }
+.emptyText { color: var(--text-muted); font-size: 13.5px; }
+
+/* ── Load more ── */
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.loadMoreBtn {
+  height: 38px;
+  padding: 0 20px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-btn);
+  font-size: 13px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  font-family: var(--font);
+}
+.loadMoreBtn:hover { background: var(--bg); color: var(--text-primary); border-color: #d1d5db; }
