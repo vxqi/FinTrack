@@ -1,0 +1,136 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 250;
+  padding: 20px;
+  animation: fadeIn .2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: var(--white);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  animation: slideUp .25s cubic-bezier(.16,1,.3,1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.closeBtn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted);
+  transition: color var(--t);
+}
+.closeBtn:hover { color: var(--text-primary); }
+
+.body {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.body strong { color: var(--text-primary); font-weight: 700; }
+
+/* ── Summary ── */
+.summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.summaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.summaryRow:last-child { border-bottom: none; }
+.summaryLabel {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+.summaryValue {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.summaryHighlight {
+  color: var(--danger);
+  font-size: 13.5px;
+}
+
+.statusPill {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 22px;
+}
+.pillWarning { color: var(--warning); background: var(--warning-light); }
+.pillDanger { color: var(--danger); background: var(--danger-light); }
+
+/* ── Buttons ── */
+.buttonRow {
+  display: flex;
+  gap: 10px;
+}
+.btnGhost {
+  flex: 1;
+  height: 42px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px; font-weight: 500;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  font-family: var(--font);
+}
+.btnGhost:hover { background: var(--bg); border-color: #d1d5db; color: var(--text-primary); }
+
+.btnDanger {
+  flex: 1;
+  height: 42px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 14px; font-weight: 600;
+  border: none; border-radius: var(--radius-btn);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--t), transform var(--t);
+  font-family: var(--font);
+}
+.btnDanger:hover:not(:disabled) { background: #B91C1C; transform: translateY(-1px); }
+.btnDanger:disabled { opacity: .65; cursor: not-allowed; }
+
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

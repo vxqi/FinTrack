@@ -1,14 +1,19 @@
 /* ─────────────────────────────────────────
-   FinTrack Design Tokens — matches Figma exactly
+   FinTrack Design Tokens
+   Light/dark values are split per-theme below.
+   Accent colour is overridden inline by ThemeContext
+   when the user picks a custom accent swatch.
 ───────────────────────────────────────── */
-:root {
+
+:root,
+[data-theme='light'] {
   /* Brand colours */
   --primary:        #1A1A2E;
   --accent:         #4F46E5;
   --accent-hover:   #4338CA;
   --accent-light:   rgba(79, 70, 229, 0.10);
 
-  /* Semantic colours */
+  /* Semantic colours (stay constant across themes) */
   --success:        #16A34A;
   --success-light:  #DCFCE7;
   --warning:        #D97706;
@@ -21,12 +26,43 @@
   --border:         #E5E7EB;
   --bg:             #F3F4F6;
   --white:          #ffffff;
+  --card-bg:        #ffffff;
 
   /* Text */
   --text-primary:   #111827;
   --text-secondary: #6B7280;
   --text-muted:     #9CA3AF;
+}
 
+[data-theme='dark'] {
+  /* Brand colours — primary inverts to a lighter panel, accent stays vivid */
+  --primary:        #15151F;
+  --accent:         #6366F1;
+  --accent-hover:   #818CF8;
+  --accent-light:   rgba(99, 102, 241, 0.16);
+
+  /* Semantic colours — slightly desaturated so they don't glow on dark bg */
+  --success:        #22C55E;
+  --success-light:  rgba(34, 197, 94, 0.14);
+  --warning:        #F59E0B;
+  --warning-light:  rgba(245, 158, 11, 0.14);
+  --danger:         #EF4444;
+  --danger-light:   rgba(239, 68, 68, 0.14);
+
+  /* Surface & border */
+  --surface:        #1C1C28;
+  --border:         #2D2D3D;
+  --bg:             #11111A;
+  --white:          #1C1C28;
+  --card-bg:        #1A1A26;
+
+  /* Text */
+  --text-primary:   #F3F4F6;
+  --text-secondary: #A8A8B8;
+  --text-muted:     #6E6E80;
+}
+
+:root {
   /* Typography */
   --font: 'Inter', sans-serif;
 
@@ -37,6 +73,13 @@
   --sp-4:  16px;
   --sp-5:  20px;
   --sp-6:  24px;
+
+  /* Density-aware spacing — overridden by [data-density='compact'] below.
+     Use these instead of hardcoded px in new/updated card components. */
+  --card-padding:   20px;
+  --card-gap:       16px;
+  --row-padding-y:  12px;
+  --section-gap:    24px;
 
   /* Border radius */
   --radius-card:  12px;
@@ -54,4 +97,18 @@
 
   /* Transitions */
   --t: .18s ease;
+  --theme-t: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+
+/* Compact density — tighter padding and row heights app-wide */
+[data-density='compact'] {
+  --card-padding:   14px;
+  --card-gap:       10px;
+  --row-padding-y:  7px;
+  --section-gap:    16px;
+}
+
+/* Smooth transition when switching themes — applied globally */
+body, .card, button, input, select {
+  transition: var(--theme-t);
 }
