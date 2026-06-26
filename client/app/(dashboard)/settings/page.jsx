@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ChevronDown } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useTheme } from '@/context/ThemeContext'
+import { useLocale } from '@/context/LocaleContext'
+import { CURRENCIES, DATE_FORMATS } from '@/lib/format'
 import { authApi, transactionsApi } from '@/lib/api'
 import Toggle from '@/components/settings/Toggle'
+import Dropdown from '@/components/settings/Dropdown'
 import SettingsCard from '@/components/settings/SettingsCard'
 import styles from './settings.module.css'
 
@@ -26,6 +28,7 @@ export default function SettingsPage() {
     spendingInsights: true,
   })
   const { themePref, accent, density, setThemePreference, setAccent, setDensity } = useTheme()
+  const { currency, dateFormat, setCurrency, setDateFormat, date } = useLocale()
   const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
@@ -65,9 +68,9 @@ export default function SettingsPage() {
     setExporting(true)
     try {
       const { data } = await transactionsApi.list({})
-      const header = 'Date,Type,Category,Merchant,Amount\n'
+      const header = 'Date,Type,Category,Merchant,Amount (NPR)\n'
       const rows = data.map(t =>
-        `${new Date(t.date).toLocaleDateString('en-US')},${t.type},${t.category},"${t.merchant || ''}",${t.amount}`
+        `${date(t.date)},${t.type},${t.category},"${t.merchant || ''}",${t.amount}`
       ).join('\n')
       const blob = new Blob([header + rows], { type: 'text/csv' })
       const url = URL.createObjectURL(blob)
@@ -117,21 +120,22 @@ export default function SettingsPage() {
           <SettingsCard title="Currency & Region">
             <div className={styles.fieldRow}>
               <span className={styles.fieldLabel}>Currency</span>
-              <button className={styles.dropdownBtn}>
-                NPR — Nepalese Rupee <ChevronDown size={14} />
-              </button>
+              <Dropdown
+                value={currency}
+                onChange={setCurrency}
+                options={Object.values(CURRENCIES).map(c => ({
+                  value: c.code,
+                  label: `${c.code} — ${c.label}`,
+                }))}
+              />
             </div>
             <div className={styles.fieldRow}>
               <span className={styles.fieldLabel}>Date format</span>
-              <button className={styles.dropdownBtn}>
-                DD / MM / YYYY <ChevronDown size={14} />
-              </button>
-            </div>
-            <div className={styles.fieldRow}>
-              <span className={styles.fieldLabel}>Language</span>
-              <button className={styles.dropdownBtn}>
-                English <ChevronDown size={14} />
-              </button>
+              <Dropdown
+                value={dateFormat}
+                onChange={setDateFormat}
+                options={Object.entries(DATE_FORMATS).map(([value, { label }]) => ({ value, label }))}
+              />
             </div>
           </SettingsCard>
         </div>
