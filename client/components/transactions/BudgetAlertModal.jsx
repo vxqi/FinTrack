@@ -1,11 +1,13 @@
 'use client'
 
 import { X } from 'lucide-react'
+import { useLocale } from '@/context/LocaleContext'
 import styles from './BudgetAlertModal.module.css'
 
 export default function BudgetAlertModal({
   category, amount, currentSpend, limit, onCancel, onConfirm, loading,
 }) {
+  const { money } = useLocale()
   const resultingSpend = currentSpend + amount
   const resultingPct = Math.round((resultingSpend / limit) * 100)
   const isOverLimit = resultingPct >= 100
@@ -21,7 +23,7 @@ export default function BudgetAlertModal({
         </div>
 
         <p className={styles.body}>
-          This transaction of <strong>NPR {amount.toLocaleString('en-US')}</strong> will push your{' '}
+          This transaction of <strong>{money(amount)}</strong> will push your{' '}
           <strong>{category}</strong> category to <strong>{resultingPct}%</strong> of its limit.
         </p>
 
@@ -29,16 +31,16 @@ export default function BudgetAlertModal({
         <div className={styles.summary}>
           <div className={styles.summaryRow}>
             <span className={styles.summaryLabel}>Current spend</span>
-            <span className={styles.summaryValue}>NPR {currentSpend.toLocaleString('en-US')}</span>
+            <span className={styles.summaryValue}>{money(currentSpend)}</span>
           </div>
           <div className={styles.summaryRow}>
             <span className={styles.summaryLabel}>Category limit</span>
-            <span className={styles.summaryValue}>NPR {limit.toLocaleString('en-US')}</span>
+            <span className={styles.summaryValue}>{money(limit)}</span>
           </div>
           <div className={styles.summaryRow}>
             <span className={styles.summaryLabel}>After this transaction</span>
             <span className={`${styles.summaryValue} ${styles.summaryHighlight}`}>
-              NPR {resultingSpend.toLocaleString('en-US')} ({resultingPct}%)
+              {money(resultingSpend)} ({resultingPct}%)
             </span>
           </div>
         </div>
