@@ -14,7 +14,9 @@ export default function SavingsGoalsPage() {
   const [error, setError] = useState('')
   const [showCompleted, setShowCompleted] = useState(false)
   const [fundsModalGoal, setFundsModalGoal] = useState(null)
-  const [showNewGoalModal, setShowNewGoalModal] = useState(false)
+
+  // null = modal closed · 'create' = new goal · a goal object = editing that goal
+  const [goalModalTarget, setGoalModalTarget] = useState(null)
 
   const loadGoals = async () => {
     setLoading(true)
@@ -42,9 +44,22 @@ export default function SavingsGoalsPage() {
     setGoals(prev => [data, ...prev])
   }
 
+  const handleSaveGoal = async (goalId, payload) => {
+    const { data } = await goalsApi.update(goalId, payload)
+    setGoals(prev => prev.map(g => g._id === goalId ? data : g))
+  }
+
+  const handleDeleteGoal = async (goalId) => {
+    await goalsApi.remove(goalId)
+    setGoals(prev => prev.filter(g => g._id !== goalId))
+  }
+
   const activeGoals    = goals.filter(g => !g.completed)
   const completedGoals = goals.filter(g => g.completed)
   const visibleGoals   = showCompleted ? completedGoals : activeGoals
+
+  const isModalOpen = goalModalTarget !== null
+  const editingGoal = goalModalTarget === 'create' ? null : goalModalTarget
 
   return (
     <div className="fade-up">
@@ -60,7 +75,7 @@ export default function SavingsGoalsPage() {
           >
             {showCompleted ? '← Back to active' : 'View completed'}
           </button>
-          <button className={styles.primaryBtn} onClick={() => setShowNewGoalModal(true)}>
+          <button className={styles.primaryBtn} onClick={() => setGoalModalTarget('create')}>
             <Plus size={14} /> New goal
           </button>
         </div>
@@ -77,12 +92,12 @@ export default function SavingsGoalsPage() {
               key={goal._id}
               goal={goal}
               onAddFunds={(g) => setFundsModalGoal(g)}
-              onEdit={() => {/* edit flow can be added later */}}
+              onEdit={(g) => setGoalModalTarget(g)}
             />
           ))}
 
           {!showCompleted && (
-            <button className={styles.emptyCard} onClick={() => setShowNewGoalModal(true)}>
+            <button className={styles.emptyCard} onClick={() => setGoalModalTarget('create')}>
               <span className={styles.emptyIcon}>+</span>
               <span className={styles.emptyLabel}>Create new goal</span>
               <span className={styles.emptyCta}>Get started</span>
@@ -103,10 +118,13 @@ export default function SavingsGoalsPage() {
         />
       )}
 
-      {showNewGoalModal && (
+      {isModalOpen && (
         <NewGoalModal
-          onClose={() => setShowNewGoalModal(false)}
+          goal={editingGoal}
+          onClose={() => setGoalModalTarget(null)}
           onCreate={handleCreateGoal}
+          onSave={handleSaveGoal}
+          onDelete={handleDeleteGoal}
         />
       )}
     </div>
