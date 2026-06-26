@@ -36,6 +36,7 @@ export const transactionsApi = {
   remove:  (id)      => api.delete(`/transactions/${id}`).then(r => r.data),
   summary: (params)  => api.get('/transactions/summary', { params }).then(r => r.data),
   monthlyTrend: (params) => api.get('/transactions/monthly-trend', { params }).then(r => r.data),
+  categoryComparison: (params) => api.get('/transactions/category-comparison', { params }).then(r => r.data),
 }
 
 // ── Budgets ───────────────────────────────────────────
