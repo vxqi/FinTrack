@@ -1,9 +1,11 @@
 'use client'
 
 import { Trash2 } from 'lucide-react'
+import { useLocale } from '@/context/LocaleContext'
 import styles from './TransactionListRow.module.css'
 
 export default function TransactionListRow({ transaction, emoji, onDelete }) {
+  const { money } = useLocale()
   const { merchant, category, amount, type, date } = transaction
   const time = new Date(date).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
   const isIncome = type === 'income'
@@ -28,7 +30,7 @@ export default function TransactionListRow({ transaction, emoji, onDelete }) {
       </button>
 
       <span className={`${styles.amount} ${isIncome ? styles.income : ''}`}>
-        {isIncome ? '+' : '-'}NPR {amount.toLocaleString('en-US')}
+        {isIncome ? '+' : '-'}{money(amount)}
       </span>
     </div>
   )
