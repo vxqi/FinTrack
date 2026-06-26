@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { useLocale } from '@/context/LocaleContext'
 import styles from './CategoryRankCard.module.css'
 
 export default function CategoryRankCard({
   rank, emoji, name, spent, limit, changePct, unusual = false, transactions = [],
 }) {
+  const { money } = useLocale()
   const [open, setOpen] = useState(false)
   const pct = Math.min(Math.round((spent / limit) * 100), 100)
   const color =
@@ -30,8 +32,8 @@ export default function CategoryRankCard({
 
       <div className={styles.amountRow}>
         <span className={styles.amount}>
-          NPR {spent.toLocaleString('en-US')}{' '}
-          <span className={styles.limit}>of {limit.toLocaleString('en-US')}</span>
+          {money(spent)}{' '}
+          <span className={styles.limit}>of {money(limit)}</span>
         </span>
         {unusual && <span className={styles.unusualPill}>Unusual spend detected</span>}
       </div>
@@ -58,7 +60,7 @@ export default function CategoryRankCard({
             {transactions.map((t, i) => (
               <div key={i} className={styles.txnRow}>
                 <span className={styles.txnName}>{t.name}</span>
-                <span className={styles.txnAmount}>NPR {t.amount.toLocaleString('en-US')}</span>
+                <span className={styles.txnAmount}>{money(t.amount)}</span>
               </div>
             ))}
           </div>
