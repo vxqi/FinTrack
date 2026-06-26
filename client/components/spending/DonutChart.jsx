@@ -1,9 +1,11 @@
 'use client'
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
+import { useLocale } from '@/context/LocaleContext'
 import styles from './DonutChart.module.css'
 
 export default function DonutChart({ data, total }) {
+  const { money } = useLocale()
   return (
     <div className={styles.wrap}>
       <div className={styles.chartArea}>
@@ -28,7 +30,7 @@ export default function DonutChart({ data, total }) {
           </PieChart>
         </ResponsiveContainer>
         <div className={styles.centerLabel}>
-          <span className={styles.centerValue}>NPR {total.toLocaleString('en-US')}</span>
+          <span className={styles.centerValue}>{money(total)}</span>
           <span className={styles.centerSub}>Total spend</span>
         </div>
       </div>
