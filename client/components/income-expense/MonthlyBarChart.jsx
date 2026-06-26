@@ -3,9 +3,11 @@
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts'
+import { useLocale } from '@/context/LocaleContext'
 import styles from './MonthlyBarChart.module.css'
 
 function CustomTooltip({ active, payload, label }) {
+  const { money } = useLocale()
   if (!active || !payload?.length) return null
   return (
     <div className={styles.tooltip}>
@@ -14,7 +16,7 @@ function CustomTooltip({ active, payload, label }) {
         <div key={i} className={styles.tooltipRow}>
           <span className={styles.tooltipDot} style={{ background: p.fill }} />
           <span className={styles.tooltipName}>{p.name}</span>
-          <span className={styles.tooltipValue}>NPR {p.value.toLocaleString('en-US')}</span>
+          <span className={styles.tooltipValue}>{money(p.value)}</span>
         </div>
       ))}
     </div>
