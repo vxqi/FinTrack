@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Check } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import { useLocale } from '@/context/LocaleContext'
 import StepProgress from '@/components/onboarding/StepProgress'
 import styles from './ready.module.css'
 
@@ -17,6 +18,7 @@ const EMPLOYMENT_LABELS = {
 export default function OnboardingReadyPage() {
   const router = useRouter()
   const { user, completeOnboarding } = useAuth()
+  const { money } = useLocale()
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
 
@@ -63,7 +65,7 @@ export default function OnboardingReadyPage() {
         <div className={styles.summaryRow}>
           <span className={styles.summaryLabel}>Monthly income</span>
           <span className={styles.summaryValue}>
-            NPR {income > 0 ? income.toLocaleString('en-US') : '—'}
+            {income > 0 ? money(income) : '—'}
           </span>
         </div>
         <div className={styles.summaryRow}>
@@ -77,7 +79,7 @@ export default function OnboardingReadyPage() {
         <div className={styles.summaryRow}>
           <span className={styles.summaryLabel}>Daily budget</span>
           <span className={`${styles.summaryValue} ${styles.summaryHighlight}`}>
-            NPR {dailyBudget.toLocaleString('en-US')}
+            {money(dailyBudget)}
           </span>
         </div>
       </div>
