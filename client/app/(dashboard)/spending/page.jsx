@@ -3,8 +3,11 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Plus, Download } from 'lucide-react'
 import { transactionsApi, budgetsApi } from '@/lib/api'
+import { useLocale } from '@/context/LocaleContext'
+import { exportTransactionsToCSV } from '@/lib/exportCsv'
 import DonutChart from '@/components/spending/DonutChart'
 import CategoryRankCard from '@/components/spending/CategoryRankCard'
+import AddCategoryModal from '@/components/spending/AddCategoryModal'
 import styles from './spending.module.css'
 
 const PERIODS = ['This month', 'Last month', '3 months']
@@ -40,35 +43,37 @@ function getMonthYearForPeriod(period) {
 }
 
 export default function SpendingPage() {
+  const { date } = useLocale()
   const [period, setPeriod] = useState('This month')
   const [transactions, setTransactions] = useState([])
   const [budgets, setBudgets] = useState([])
   const [comparison, setComparison] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [exporting, setExporting] = useState(false)
+  const [showAddCategory, setShowAddCategory] = useState(false)
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true)
-      setError('')
-      try {
-        const { month, year } = getMonthYearForPeriod(period)
-        const [txnRes, budgetRes, comparisonRes] = await Promise.all([
-          transactionsApi.list({ type: 'expense', month, year }),
-          budgetsApi.withSpend({ month, year }),
-          transactionsApi.categoryComparison({ month, year }),
-        ])
-        setTransactions(txnRes.data)
-        setBudgets(budgetRes.data)
-        setComparison(comparisonRes.data)
-      } catch {
-        setError('Could not load spending data.')
-      } finally {
-        setLoading(false)
-      }
+  const load = async () => {
+    setLoading(true)
+    setError('')
+    try {
+      const { month, year } = getMonthYearForPeriod(period)
+      const [txnRes, budgetRes, comparisonRes] = await Promise.all([
+        transactionsApi.list({ type: 'expense', month, year }),
+        budgetsApi.withSpend({ month, year }),
+        transactionsApi.categoryComparison({ month, year }),
+      ])
+      setTransactions(txnRes.data)
+      setBudgets(budgetRes.data)
+      setComparison(comparisonRes.data)
+    } catch {
+      setError('Could not load spending data.')
+    } finally {
+      setLoading(false)
     }
-    load()
-  }, [period])
+  }
+
+  useEffect(() => { load() }, [period])
 
   // Group expenses by category for the donut chart
   const donutData = useMemo(() => {
@@ -113,6 +118,21 @@ export default function SpendingPage() {
   }, [donutData, budgets, comparison, transactions])
 
   const topCategory = donutData[0]
+  const existingBudgetCategories = budgets.map(b => b.category)
+
+  const handleExport = () => {
+    setExporting(true)
+    try {
+      exportTransactionsToCSV(transactions, date, 'fintrack-spending.csv')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleAddCategory = async (payload) => {
+    await budgetsApi.create(payload)
+    await load() // refresh so the new category's budget shows up immediately
+  }
 
   return (
     <div className="fade-up">
@@ -129,8 +149,8 @@ export default function SpendingPage() {
             </button>
           ))}
         </div>
-        <button className={styles.exportBtn}>
-          <Download size={14} /> Export CSV
+        <button className={styles.exportBtn} onClick={handleExport} disabled={exporting || transactions.length === 0}>
+          <Download size={14} /> {exporting ? 'Exporting…' : 'Export CSV'}
         </button>
       </div>
 
@@ -157,7 +177,6 @@ export default function SpendingPage() {
                 <p className={styles.narrativeText}>
                   This period you spent mostly on <strong>{topCategory.name} ({topCategory.pct}%)</strong>.
                 </p>
-                <button className={styles.narrativeLink}>Read full summary →</button>
               </div>
             )}
           </div>
@@ -166,7 +185,7 @@ export default function SpendingPage() {
           <div className={styles.rightCol}>
             <div className={styles.rightHeader}>
               <h2 className={styles.cardTitle}>Category ranking (highest → lowest)</h2>
-              <button className={styles.addBtn}>
+              <button className={styles.addBtn} onClick={() => setShowAddCategory(true)}>
                 <Plus size={14} /> Add category
               </button>
             </div>
@@ -176,6 +195,14 @@ export default function SpendingPage() {
             ))}
           </div>
         </div>
+      )}
+
+      {showAddCategory && (
+        <AddCategoryModal
+          existingCategories={existingBudgetCategories}
+          onClose={() => setShowAddCategory(false)}
+          onCreate={handleAddCategory}
+        />
       )}
     </div>
   )
