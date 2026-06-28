@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { Plus } from 'lucide-react'
 import { transactionsApi } from '@/lib/api'
 import { useLocale } from '@/context/LocaleContext'
 import StatCard from '@/components/dashboard/StatCard'
 import MonthlyBarChart from '@/components/income-expense/MonthlyBarChart'
 import SplitComparison from '@/components/income-expense/SplitComparison'
+import LogExpenseModal from '@/components/transactions/LogExpenseModal'
 import styles from './income-expense.module.css'
 
 const PERIODS = ['Last 5 months', 'This year']
@@ -39,28 +41,29 @@ function buildMonthlyData(trendRaw, monthsBack) {
 }
 
 export default function IncomeExpensePage() {
+  const router = useRouter()
   const { money } = useLocale()
   const [period, setPeriod] = useState('Last 5 months')
   const [monthlyData, setMonthlyData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [showAddIncome, setShowAddIncome] = useState(false)
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true)
-      setError('')
-      try {
-        const monthsBack = period === 'This year' ? 12 : 5
-        const { data } = await transactionsApi.monthlyTrend({ months: monthsBack })
-        setMonthlyData(buildMonthlyData(data, monthsBack))
-      } catch {
-        setError('Could not load income vs expense data.')
-      } finally {
-        setLoading(false)
-      }
+  const load = async () => {
+    setLoading(true)
+    setError('')
+    try {
+      const monthsBack = period === 'This year' ? 12 : 5
+      const { data } = await transactionsApi.monthlyTrend({ months: monthsBack })
+      setMonthlyData(buildMonthlyData(data, monthsBack))
+    } catch {
+      setError('Could not load income vs expense data.')
+    } finally {
+      setLoading(false)
     }
-    load()
-  }, [period])
+  }
+
+  useEffect(() => { load() }, [period])
 
   const { totalIncome, totalExpenses, netBalance, spentPct } = useMemo(() => {
     const current = monthlyData[monthlyData.length - 1] || { income: 0, expense: 0 }
@@ -82,6 +85,12 @@ export default function IncomeExpensePage() {
     savings: savingsPct,
   }
 
+  const handleAddIncome = async (payload) => {
+    await transactionsApi.create(payload)
+    await load() // refresh the chart/stats immediately with the new income included
+    window.dispatchEvent(new CustomEvent('fintrack:transaction-logged'))
+  }
+
   return (
     <div className="fade-up">
       {/* Top row */}
@@ -97,7 +106,7 @@ export default function IncomeExpensePage() {
             </button>
           ))}
         </div>
-        <button className={styles.ghostBtn}>
+        <button className={styles.ghostBtn} onClick={() => setShowAddIncome(true)}>
           <Plus size={14} /> Add income
         </button>
       </div>
@@ -156,12 +165,22 @@ export default function IncomeExpensePage() {
                   <p className={styles.fixBody}>
                     You&apos;ve spent {spentPct}% of your income — review your biggest category to find savings.
                   </p>
-                  <button className={styles.fixBtn}>Review budget →</button>
+                  <button className={styles.fixBtn} onClick={() => router.push('/spending')}>
+                    Review budget →
+                  </button>
                 </div>
               )}
             </div>
           </div>
         </>
+      )}
+
+      {showAddIncome && (
+        <LogExpenseModal
+          defaultType="income"
+          onClose={() => setShowAddIncome(false)}
+          onCreate={handleAddIncome}
+        />
       )}
     </div>
   )

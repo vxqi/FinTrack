@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Search, Download, Plus, ArrowUpDown } from 'lucide-react'
 import { transactionsApi } from '@/lib/api'
+import { useLocale } from '@/context/LocaleContext'
+import { exportTransactionsToCSV } from '@/lib/exportCsv'
 import TransactionListRow from '@/components/transactions/TransactionListRow'
 import LogExpenseModal from '@/components/transactions/LogExpenseModal'
 import styles from './transactions.module.css'
@@ -29,10 +31,12 @@ function formatDateHeader(dateStr) {
 }
 
 export default function TransactionsPage() {
+  const { date } = useLocale()
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showModal, setShowModal] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   const [search, setSearch] = useState('')
   const [period, setPeriod] = useState('All')
@@ -100,6 +104,15 @@ export default function TransactionsPage() {
     )
   }, [transactions, search, sortDesc])
 
+  const handleExport = () => {
+    setExporting(true)
+    try {
+      exportTransactionsToCSV(filtered, date, 'fintrack-transactions.csv')
+    } finally {
+      setExporting(false)
+    }
+  }
+
   const visible = filtered.slice(0, visibleCount)
 
   // Group by date
@@ -119,7 +132,9 @@ export default function TransactionsPage() {
       <div className={styles.topRow}>
         <h1 className={styles.pageTitle}>All Transactions</h1>
         <div className={styles.actions}>
-          <button className={styles.ghostBtn}><Download size={14} /> Export CSV</button>
+          <button className={styles.ghostBtn} onClick={handleExport} disabled={exporting || filtered.length === 0}>
+            <Download size={14} /> {exporting ? 'Exporting…' : 'Export CSV'}
+          </button>
           <button className={styles.primaryBtn} onClick={() => setShowModal(true)}>
             <Plus size={14} /> Log expense
           </button>

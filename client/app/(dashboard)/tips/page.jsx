@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { Search } from 'lucide-react'
-import { transactionsApi } from '@/lib/api'
+import { transactionsApi, savedTipsApi } from '@/lib/api'
 import TipCard from '@/components/tips/TipCard'
 import styles from './tips.module.css'
 
@@ -29,15 +29,22 @@ export default function TipsPage() {
   const [activeTab, setActiveTab] = useState('For you')
   const [glossarySearch, setGlossarySearch] = useState('')
   const [txnCount, setTxnCount] = useState(0)
+  const [savedIds, setSavedIds] = useState([])
   const [loading, setLoading] = useState(true)
+  const [savingId, setSavingId] = useState(null) // tipId currently being saved/unsaved, for disabling double-clicks
 
   useEffect(() => {
     const load = async () => {
       try {
-        const { data } = await transactionsApi.list({})
-        setTxnCount(data.length)
+        const [txnRes, savedRes] = await Promise.all([
+          transactionsApi.list({}),
+          savedTipsApi.list(),
+        ])
+        setTxnCount(txnRes.data.length)
+        setSavedIds(savedRes.data)
       } catch {
         setTxnCount(0)
+        setSavedIds([])
       } finally {
         setLoading(false)
       }
@@ -50,6 +57,27 @@ export default function TipsPage() {
   }, [txnCount])
 
   const readableCount = tipsWithLockState.filter(t => !t.locked).length
+
+  // The featured tip in the banner — the first one currently unlocked
+  const featuredTip = tipsWithLockState.find(t => !t.locked)
+  const featuredIsSaved = featuredTip ? savedIds.includes(featuredTip.id) : false
+
+  const toggleSave = async (tipId) => {
+    setSavingId(tipId)
+    try {
+      if (savedIds.includes(tipId)) {
+        await savedTipsApi.unsave(tipId)
+        setSavedIds(prev => prev.filter(id => id !== tipId))
+      } else {
+        await savedTipsApi.save(tipId)
+        setSavedIds(prev => [...prev, tipId])
+      }
+    } catch {
+      // silently ignore — saving a tip is non-critical, no need to interrupt the user
+    } finally {
+      setSavingId(null)
+    }
+  }
 
   const filteredGlossary = useMemo(() => {
     if (!glossarySearch.trim()) return GLOSSARY
@@ -87,7 +115,15 @@ export default function TipsPage() {
                   ? 'Log your first transaction to unlock tips tailored to your spending.'
                   : `You've logged ${txnCount} transaction${txnCount === 1 ? '' : 's'} — keep going to unlock more tips below.`}
             </p>
-            <button className={styles.saveTipBtn}>Save tip</button>
+            {featuredTip && (
+              <button
+                className={styles.saveTipBtn}
+                onClick={() => toggleSave(featuredTip.id)}
+                disabled={savingId === featuredTip.id}
+              >
+                {featuredIsSaved ? '✓ Saved' : 'Save tip'}
+              </button>
+            )}
           </div>
 
           {/* Tip grid */}
@@ -101,6 +137,8 @@ export default function TipsPage() {
                 readTime={tip.readTime}
                 locked={tip.locked}
                 unlockHint={`Log ${tip.unlockAt - txnCount} more expenses to unlock`}
+                saved={savedIds.includes(tip.id)}
+                onToggleSave={() => toggleSave(tip.id)}
                 onRead={() => {}}
               />
             ))}
@@ -112,7 +150,9 @@ export default function TipsPage() {
             <div className={styles.progressTrack}>
               <div className={styles.progressFill} style={{ width: `${(readableCount / TIPS.length) * 100}%` }} />
             </div>
-            <button className={styles.viewAllLink}>View all tips →</button>
+            <button className={styles.viewAllLink} onClick={() => setActiveTab('All tips')}>
+              View all tips →
+            </button>
           </div>
         </>
       ) : (
