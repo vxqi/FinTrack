@@ -7,6 +7,9 @@ import { useLocale } from '@/context/LocaleContext'
 import { exportTransactionsToCSV } from '@/lib/exportCsv'
 import TransactionListRow from '@/components/transactions/TransactionListRow'
 import LogExpenseModal from '@/components/transactions/LogExpenseModal'
+import LoadingState from '@/components/ui/LoadingState'
+import EmptyState from '@/components/ui/EmptyState'
+import ErrorState from '@/components/ui/ErrorState'
 import styles from './transactions.module.css'
 
 const CATEGORY_EMOJI = {
@@ -46,6 +49,7 @@ export default function TransactionsPage() {
 
   const loadTransactions = async () => {
     setLoading(true)
+    setError('')
     try {
       const params = {}
       if (period === 'This month') {
@@ -178,11 +182,15 @@ export default function TransactionsPage() {
       {/* List */}
       <div className={styles.card}>
         {loading ? (
-          <p className={styles.loadingText}>Loading transactions…</p>
+          <LoadingState label="Loading transactions…" />
         ) : error ? (
-          <p className={styles.errorText}>{error}</p>
+          <ErrorState message={error} onRetry={loadTransactions} />
         ) : grouped.length === 0 ? (
-          <p className={styles.emptyText}>No transactions found.</p>
+          <EmptyState
+            icon="🔍"
+            title="No transactions found"
+            body={search ? 'Try a different search term or clear your filters.' : 'Log your first transaction to see it here.'}
+          />
         ) : (
           grouped.map(([dateKey, txns]) => (
             <div key={dateKey}>
