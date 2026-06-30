@@ -8,6 +8,9 @@ import { exportTransactionsToCSV } from '@/lib/exportCsv'
 import DonutChart from '@/components/spending/DonutChart'
 import CategoryRankCard from '@/components/spending/CategoryRankCard'
 import AddCategoryModal from '@/components/spending/AddCategoryModal'
+import LoadingState from '@/components/ui/LoadingState'
+import EmptyState from '@/components/ui/EmptyState'
+import ErrorState from '@/components/ui/ErrorState'
 import styles from './spending.module.css'
 
 const PERIODS = ['This month', 'Last month', '3 months']
@@ -155,13 +158,15 @@ export default function SpendingPage() {
       </div>
 
       {loading ? (
-        <p className={styles.loadingText}>Loading spending data…</p>
+        <LoadingState label="Loading spending data…" />
       ) : error ? (
-        <p className={styles.errorText}>{error}</p>
+        <ErrorState message={error} onRetry={load} />
       ) : transactions.length === 0 ? (
-        <div className={styles.emptyState}>
-          <p>No expenses logged for this period yet.</p>
-        </div>
+        <EmptyState
+          icon="💸"
+          title="No expenses logged for this period"
+          body="Once you log some expenses, your spending breakdown will appear here."
+        />
       ) : (
         <div className={styles.layout}>
           {/* Left column */}
