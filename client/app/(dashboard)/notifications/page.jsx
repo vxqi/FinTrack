@@ -4,6 +4,8 @@ import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useNotifications } from '@/hooks/useNotifications'
 import NotificationItem from '@/components/notifications/NotificationItem'
+import LoadingState from '@/components/ui/LoadingState'
+import EmptyState from '@/components/ui/EmptyState'
 import styles from './notifications.module.css'
 
 const TABS = ['All', 'Alerts', 'Summaries', 'Tips']
@@ -64,9 +66,13 @@ export default function NotificationsPage() {
       {/* List */}
       <div className={styles.list}>
         {loading ? (
-          <p className={styles.loadingText}>Loading notifications…</p>
+          <LoadingState label="Loading notifications…" />
         ) : visible.length === 0 ? (
-          <p className={styles.emptyText}>You&apos;re all caught up! No notifications here.</p>
+          <EmptyState
+            icon="🔔"
+            title="You're all caught up!"
+            body="No notifications here right now — check back after you log more activity."
+          />
         ) : (
           visible.map(n => (
             <NotificationItem

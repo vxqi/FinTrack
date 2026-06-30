@@ -6,6 +6,9 @@ import { goalsApi } from '@/lib/api'
 import GoalCard from '@/components/goals/GoalCard'
 import AddFundsModal from '@/components/goals/AddFundsModal'
 import NewGoalModal from '@/components/goals/NewGoalModal'
+import LoadingState from '@/components/ui/LoadingState'
+import EmptyState from '@/components/ui/EmptyState'
+import ErrorState from '@/components/ui/ErrorState'
 import styles from './savings.module.css'
 
 export default function SavingsGoalsPage() {
@@ -82,9 +85,9 @@ export default function SavingsGoalsPage() {
       </div>
 
       {loading ? (
-        <p className={styles.loadingText}>Loading goals…</p>
+        <LoadingState label="Loading your goals…" />
       ) : error ? (
-        <p className={styles.errorText}>{error}</p>
+        <ErrorState message={error} onRetry={loadGoals} />
       ) : (
         <div className={styles.grid}>
           {visibleGoals.map(goal => (
@@ -105,7 +108,13 @@ export default function SavingsGoalsPage() {
           )}
 
           {visibleGoals.length === 0 && showCompleted && (
-            <p className={styles.emptyText}>No completed goals yet — keep saving!</p>
+            <div className={styles.emptyTextWrap}>
+              <EmptyState
+                icon="🏆"
+                title="No completed goals yet"
+                body="Keep saving — your finished goals will show up here once you hit 100%."
+              />
+            </div>
           )}
         </div>
       )}
