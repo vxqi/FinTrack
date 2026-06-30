@@ -97,6 +97,10 @@
 }
 .errorText { color: var(--danger); }
 
+.emptyTextWrap {
+  grid-column: 1 / -1;
+}
+
 .emptyText {
   grid-column: 1 / -1;
   text-align: center;
